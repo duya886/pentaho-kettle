@@ -521,6 +521,59 @@ public class SpoonJobDelegate extends SpoonDelegate {
     wd.open();
   }
 
+  public void timingIncrementalBackupWizard(){
+    final List<DatabaseMeta> databases = spoon.getActiveDatabases();
+    if ( databases.size() == 0 ) {
+      return; // Nothing to do here
+    }
+
+    final RipDatabaseWizardPage1 page1 = new RipDatabaseWizardPage1( "1", databases );
+    final RipDatabaseWizardPage2 page2 = new RipDatabaseWizardPage2( "2" );
+    final RipDatabaseWizardPage3 page3 = new RipDatabaseWizardPage3( "3", spoon.getRepository() );
+
+    Wizard wizard = new Wizard() {
+      public boolean performFinish() {
+        try {
+          JobMeta jobMeta =
+                  ripDB( databases, page3.getJobname(), page3.getRepositoryDirectory(), page3.getDirectory(), page1
+                          .getSourceDatabase(), page1.getTargetDatabase(), page2.getSelection() );
+          if ( jobMeta == null ) {
+            return false;
+          }
+
+          if ( page3.getRepositoryDirectory() != null ) {
+            spoon.saveToRepository( jobMeta, false );
+          } else {
+            spoon.saveToFile( jobMeta );
+          }
+
+          addJobGraph( jobMeta );
+          return true;
+        } catch ( Exception e ) {
+          new ErrorDialog( spoon.getShell(), "Error", "An unexpected error occurred!", e );
+          return false;
+        }
+      }
+
+      /**
+       * @see org.eclipse.jface.wizard.Wizard#canFinish()
+       */
+      public boolean canFinish() {
+        return page3.canFinish();
+      }
+    };
+
+    wizard.addPage( page1 );
+    wizard.addPage( page2 );
+    wizard.addPage( page3 );
+
+    WizardDialog wd = new WizardDialog( spoon.getShell(), wizard );
+    WizardDialog.setDefaultImage( GUIResource.getInstance().getImageWizard() );
+    wd.setMinimumPageSize( 700, 400 );
+    wd.updateSize();
+    wd.open();
+  }
+
   public JobMeta ripDB( final List<DatabaseMeta> databases, final String jobname,
     final RepositoryDirectoryInterface repdir, final String directory, final DatabaseMeta sourceDbInfo,
     final DatabaseMeta targetDbInfo, final String[] tables ) {

@@ -6944,6 +6944,7 @@ public class Spoon extends ApplicationWindow implements AddUndoPositionInterface
         disableMenuItem( doc, "wizard-connection", disableTransMenu && disableJobMenu );
         disableMenuItem( doc, "wizard-copy-table", disableTransMenu && disableJobMenu );
         disableMenuItem( doc, "wizard-copy-tables", isRepositoryRunning && disableTransMenu && disableJobMenu );
+        disableMenuItem( doc, "timing-incremental-backup", isRepositoryRunning && disableTransMenu && disableJobMenu );
 
         disableMenuItem( doc, "database-inst-dependancy", !isRepositoryRunning );
 
@@ -8725,6 +8726,9 @@ public class Spoon extends ApplicationWindow implements AddUndoPositionInterface
     delegates.jobs.ripDBWizard();
   }
 
+  public void timingIncrementalBackupWizard() {
+    delegates.jobs.timingIncrementalBackupWizard();
+  }
   public JobMeta ripDB( final List<DatabaseMeta> databases, final String jobName,
     final RepositoryDirectory repdir, final String directory, final DatabaseMeta sourceDbInfo,
     final DatabaseMeta targetDbInfo, final String[] tables ) {

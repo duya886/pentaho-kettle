@@ -165,6 +165,8 @@
               command="spoon.copyTableWizard()" />
             <menuitem id="wizard-copy-tables" acceltext="CTRL-F10" accesskey="ctrl-f10" label="${Spoon.Menu.Wizard.CopyTables}"
               command="spoon.ripDBWizard()" />
+            <menuitem id="timing-incremental-backup" acceltext="CTRL-F11" accesskey="ctrl-f11" label="${Spoon.Menu.Wizard.TimingIncrementalBackup}"
+                      command="spoon.timingIncrementalBackupWizard()" />
           </menupopup>
         </menu>
         <!--
